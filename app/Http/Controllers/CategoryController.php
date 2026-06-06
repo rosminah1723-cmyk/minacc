@@ -5,45 +5,46 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Services\CategoryService;
-use App\Http\Controllers\Api\BaseController;
+use App\Http\Controllers\Api\BaseController; // 1. Hubungkan ke BaseController
+use Exception;
 
-class CategoryController extends BaseController
+class CategoryController extends BaseController // 2. Ubah extends ke BaseController
 {
     protected CategoryService $svc;
 
-    public function __construct(CategoryService $svc)
+    public function __construct(CategoryService $svc) 
     {
         $this->svc = $svc;
     }
 
-    public function index()
+    public function index() 
     {
         return $this->success($this->svc->all());
     }
 
-    public function store(StoreCategoryRequest $req)
+    public function store(StoreCategoryRequest $req) 
     {
-        $category = $this->svc->create($req->validated());
-        return $this->success($category, "Kategori dibuat", 201);
+        $cat = $this->svc->create($req->validated());
+        return $this->success($cat, "Kategori dibuat", 201);
     }
 
-    public function show($id)
+    public function show($id) 
     {
         try {
-            $category = $this->svc->find($id);
-            return $this->success($category);
-        } catch (\Exception $e) {
+            $cat = $this->svc->find($id);
+            return $this->success($cat);
+        } catch (Exception $e) {
             return $this->error($e->getMessage(), 404);
         }
     }
 
-    public function update(UpdateCategoryRequest $req, $id)
+    public function update(UpdateCategoryRequest $req, $id) 
     {
-        $category = $this->svc->update($id, $req->validated());
-        return $this->success($category, "Kategori diperbarui");
+        $cat = $this->svc->update($id, $req->validated());
+        return $this->success($cat, "Kategori diperbarui");
     }
 
-    public function destroy($id)
+    public function destroy($id) 
     {
         $this->svc->delete($id);
         return $this->success(null, "Kategori dihapus", 204);
